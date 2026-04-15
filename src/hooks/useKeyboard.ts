@@ -27,7 +27,7 @@ export function useKeyboard(noteMap: Record<string, NoteInfo>): Set<string> {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat) return;
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
       const key = codeToKey(e.code);
       if (!key) return;
       const noteInfo = noteMapRef.current[key];
