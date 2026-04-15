@@ -38,3 +38,8 @@
   border-color: #7ab8e0;
   color: #fff;
 }
+
+.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}

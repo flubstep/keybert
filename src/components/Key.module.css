@@ -15,14 +15,14 @@
 }
 
 /* Open string colors */
-.stringG, .stringD, .stringA, .stringE { background: #2a3e2e; border-color: #4f8a5a; }
+.openString { background: #2a3e2e; border-color: #4f8a5a; }
 
 .key.active {
   background: #5b8fb9;
   border-color: #7ab8e0;
 }
 
-.stringG.active, .stringD.active, .stringA.active, .stringE.active { background: #5ba070; border-color: #80c898; }
+.openString.active { background: #5ba070; border-color: #80c898; }
 
 .label {
   font-size: 14px;
