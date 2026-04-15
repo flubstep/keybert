@@ -1,4 +1,4 @@
-export type Mode = "simple" | "fifths";
+export type Mode = "simple" | "fifths" | "fourths";
 
 export interface NoteInfo {
   qwertyKey: string;
@@ -80,9 +80,9 @@ function buildSimpleRows(tonicIndex: number): NoteInfo[][] {
   );
 }
 
-// --- Fifths mode ---
+// --- Full chromatic modes (fifths / fourths) ---
 
-const FIFTHS_QWERTY_ROWS: string[][] = [
+const FULL_QWERTY_ROWS: string[][] = [
   ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="],
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
@@ -93,13 +93,13 @@ function keyLabel(key: string): string {
   return key.length === 1 && key >= "a" && key <= "z" ? key.toUpperCase() : key;
 }
 
-function buildFifthsRows(tonicIndex: number): NoteInfo[][] {
+function buildFullRows(tonicIndex: number, interval: number): NoteInfo[][] {
   const baseMidi = 48 + tonicIndex; // start at octave 3
-  const maxLen = Math.max(...FIFTHS_QWERTY_ROWS.map((r) => r.length));
-  return FIFTHS_QWERTY_ROWS.map((row, rowIndex) => {
-    const rowBase = baseMidi + rowIndex * 7; // each row a perfect fifth up
+  const maxLen = Math.max(...FULL_QWERTY_ROWS.map((r) => r.length));
+  return FULL_QWERTY_ROWS.map((row, rowIndex) => {
+    const rowBase = baseMidi + rowIndex * interval;
     return row.map((key, i) => {
-      const semitones = maxLen - 1 - i; // consistent across rows so columns align in fifths
+      const semitones = maxLen - 1 - i;
       const midi = rowBase + semitones;
       return {
         qwertyKey: key,
@@ -115,7 +115,8 @@ function buildFifthsRows(tonicIndex: number): NoteInfo[][] {
 // --- Public API ---
 
 export function buildKeyboardRows(mode: Mode, tonicIndex: number): NoteInfo[][] {
-  return mode === "simple" ? buildSimpleRows(tonicIndex) : buildFifthsRows(tonicIndex);
+  if (mode === "simple") return buildSimpleRows(tonicIndex);
+  return buildFullRows(tonicIndex, mode === "fifths" ? 7 : 5);
 }
 
 export function buildNoteMap(mode: Mode, tonicIndex: number): Record<string, NoteInfo> {

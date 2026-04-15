@@ -4,6 +4,7 @@ import styles from "./ModeSwitch.module.css";
 const MODES: { value: Mode; label: string }[] = [
   { value: "simple", label: "Simple" },
   { value: "fifths", label: "Full (fifths)" },
+  { value: "fourths", label: "Full (fourths)" },
 ];
 
 interface ModeSwitchProps {
