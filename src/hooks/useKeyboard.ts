@@ -2,6 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import type { NoteInfo } from "../data/noteMap";
 import { ensureResumed, startNote, stopNote, stopAllNotes } from "../audio/audioEngine";
 
+/** Map physical key codes to our qwertyKey identifiers */
+function codeToKey(code: string): string | null {
+  if (code.startsWith("Key")) return code[3].toLowerCase();
+  if (code.startsWith("Digit")) return code[5];
+  const map: Record<string, string> = {
+    Minus: "-",
+    Equal: "=",
+    BracketLeft: "[",
+    BracketRight: "]",
+    Semicolon: ";",
+    Quote: "'",
+    Comma: ",",
+    Period: ".",
+    Slash: "/",
+  };
+  return map[code] ?? null;
+}
+
 export function useKeyboard(noteMap: Record<string, NoteInfo>): Set<string> {
   const [activeKeys, setActiveKeys] = useState<Set<string>>(new Set());
   const noteMapRef = useRef(noteMap);
@@ -10,7 +28,8 @@ export function useKeyboard(noteMap: Record<string, NoteInfo>): Set<string> {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat) return;
-      const key = e.key.toLowerCase();
+      const key = codeToKey(e.code);
+      if (!key) return;
       const noteInfo = noteMapRef.current[key];
       if (!noteInfo) return;
 
@@ -21,8 +40,8 @@ export function useKeyboard(noteMap: Record<string, NoteInfo>): Set<string> {
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase();
-      if (!noteMapRef.current[key]) return;
+      const key = codeToKey(e.code);
+      if (!key || !noteMapRef.current[key]) return;
 
       stopNote(key);
       setActiveKeys((prev) => {
