@@ -106,7 +106,7 @@ function buildFullRows(tonicIndex: number, interval: number): NoteInfo[][] {
         keyLabel: keyLabel(key),
         note: midiToName(midi),
         frequency: midiToFreq(midi),
-        isOpenString: i === row.length - 1,
+        isOpenString: i === interval,
       };
     });
   });
